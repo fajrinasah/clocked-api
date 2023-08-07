@@ -27,12 +27,12 @@ export const AttendanceLog = db.sequelize.define(
     },
 
     clocked_in: {
-      type: DataTypes.DATE,
+      type: DataTypes.TIME,
       defaultValue: null,
     },
 
     clocked_out: {
-      type: DataTypes.DATE,
+      type: DataTypes.TIME,
       defaultValue: null,
     },
 
