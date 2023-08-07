@@ -1,3 +1,6 @@
+import { ValidationError } from "yup";
+import chalk from "chalk";
+
 import * as helpers from "../../helpers/index.js";
 import * as errorStatus from "../../middlewares/globalErrorHandler/errorStatuses.js";
 import * as errorMessage from "../../middlewares/globalErrorHandler/errorMessages.js";
@@ -50,6 +53,16 @@ export const saveEmployeeData = async (req, res, next) => {
         "Full name, date of birth, and password was updated successfully.",
     });
   } catch (error) {
+    // IF ERROR FROM VALIDATION
+    if (error instanceof ValidationError) {
+      console.error(chalk.bgRedBright("Validation Error: "));
+
+      return next({
+        status: errorStatus.BAD_REQUEST_STATUS,
+        message: error?.errors?.[0],
+      });
+    }
+
     next(error);
   }
 };
