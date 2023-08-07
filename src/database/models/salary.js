@@ -17,7 +17,7 @@ export const Salary = db.sequelize.define(
     },
 
     for: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.STRING,
       allowNull: false,
     },
 

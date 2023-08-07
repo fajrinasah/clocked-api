@@ -47,6 +47,7 @@ app.use("/api/auth", routers.authRouters);
 app.use("/api/employees", routers.employeesRouters);
 app.use("/api/shifts", routers.shiftsRouters);
 app.use("/api/logs", routers.logsRouters);
+app.use("/api/salaries", routers.salariesRouters);
 
 /*-------------------------------------------------------*/
 // USE ERROR HANDLER
