@@ -2,7 +2,8 @@ import { verifyToken } from "../../helpers/token.js";
 import * as errorStatus from "../globalErrorHandler/errorStatuses.js";
 import * as errorMessage from "../globalErrorHandler/errorMessages.js";
 
-export async function verifyUser(req, res, next) {
+// CHECK IF USER'S ROLE IS ADMIN (role_id: 1)
+export async function verifyAdmin(req, res, next) {
   try {
     const token = req.headers.authorization?.split(" ")[1];
 
@@ -10,6 +11,13 @@ export async function verifyUser(req, res, next) {
       throw { message: errorMessage.UNAUTHORIZED + `: no token was provided.` };
 
     const decoded = verifyToken(token);
+
+    if (decoded?.role_id !== 1)
+      throw {
+        message:
+          errorMessage.UNAUTHORIZED + `: only admin can access this feature.`,
+      };
+
     req.user = decoded;
 
     next();
