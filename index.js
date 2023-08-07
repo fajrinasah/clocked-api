@@ -46,6 +46,7 @@ app.get("/api", (req, res) => {
 app.use("/api/auth", routers.authRouters);
 app.use("/api/employees", routers.employeesRouters);
 app.use("/api/shifts", routers.shiftsRouters);
+app.use("/api/logs", routers.logsRouters);
 
 /*-------------------------------------------------------*/
 // USE ERROR HANDLER
