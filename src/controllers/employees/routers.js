@@ -10,4 +10,9 @@ POST
 -------------------------------------------------------------*/
 router.post("/new-employee", verifyAdmin, employeesControllers.addEmployee);
 
+/*------------------------------------------------------------
+GET
+-------------------------------------------------------------*/
+router.get("", verifyAdmin, employeesControllers.getAllEmployees);
+
 export default router;
