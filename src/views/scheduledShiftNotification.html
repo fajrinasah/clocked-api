@@ -140,7 +140,7 @@
       }
     </style>
 
-    <title>Account Verification</title>
+    <title>[Notification] New Scheduled Shift</title>
   </head>
 
   <body>
@@ -154,34 +154,27 @@
       </div>
     </header>
     <main>
-      <h1>Account Verification for Attendance App</h1>
-      <p class="primary-info">Hello!</p>
+      <h1>[Notification] New Scheduled Shift</h1>
+      <p class="primary-info">Hello, {{name}}!</p>
 
       <p class="primary-info">
-        Glad to have you joined our team. Below are your account information to
-        access dnt's attendance app.
+        You have been assigned to a new scheduled shift. Below are the details
+        of it.
       </p>
 
       <p class="primary-info">
-        Email: <span class="identifier">{{email}}</span>
+        Shift: <span class="identifier">{{shift}}</span>
       </p>
-
-      <p class="primary-info">Your OTP token to verify the account is</p>
+      <p class="primary-info">Date: <span class="identifier">{{date}}</span></p>
+      <p class="primary-info">
+        Start: <span class="identifier">{{start}}</span>
+      </p>
+      <p class="primary-info">End: <span class="identifier">{{end}}</span></p>
 
       <p class="primary-info">
-        <span class="important">{{otpToken}}</span>
+        Please do not forget to do do clock-in and clock-out using your dnt's
+        attendance app.
       </p>
-
-      <p class="primary-info">
-        Please activate your account and input required data (full name, date of
-        birth, and password) as soon as possible. You can start by clicking the
-        link below to go to account verification page.
-        <strong>
-          Please do not share OTP token and the link to other people.
-        </strong>
-      </p>
-
-      <a href="{{link}}" class="important">Verify</a>
 
       <p class="additional-info">
         If you are not part of dnt's team, please ignore this email.
