@@ -1,0 +1,193 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=B612:ital,wght@0,400;0,700;1,400;1,700&family=Forum&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --main: #f2e9e4;
+        --contrast: #22223b;
+        --accent: #c9ada7;
+      }
+
+      *,
+      ::after,
+      ::before {
+        box-sizing: border-box;
+        padding: 0px;
+        margin: 0px;
+      }
+
+      html {
+        font-size: 62.5%;
+      }
+
+      body {
+        font-family: "B612", sans-serif;
+        font-size: 1.8rem;
+        color: var(--contrast);
+        background-color: var(--main);
+      }
+
+      header {
+        border-bottom: 3px solid var(--contrast);
+      }
+
+      header div {
+        display: flex;
+        place-content: center;
+        place-items: center;
+        width: 100%;
+        margin-bottom: 5px;
+        border-bottom: 1px solid var(--contrast);
+      }
+
+      header img {
+        width: 100px;
+      }
+
+      .logo {
+        font-family: "Forum", serif;
+        font-size: 8rem;
+        letter-spacing: 0.3rem;
+      }
+
+      main {
+        display: flex;
+        flex-direction: column;
+        place-content: center;
+        place-items: center;
+      }
+
+      main h1 {
+        width: 80%;
+        padding: 3rem 0;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid var(--contrast);
+
+        font-family: "Forum", serif;
+        font-size: 4rem;
+        font-weight: 200;
+        text-align: center;
+      }
+
+      .primary-info {
+        width: 70%;
+        padding: 1rem 0 2rem 0;
+
+        text-align: center;
+      }
+
+      .identifier {
+        font-weight: bold;
+        color: var(--main);
+        background-color: var(--contrast);
+      }
+
+      .important {
+        padding: 2rem 0 5rem 0;
+
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: var(--contrast);
+      }
+
+      main a {
+        transition: all 3ms ease-in-out;
+      }
+
+      main a:hover {
+        color: var(--accent);
+        transform: scale(0.95);
+      }
+
+      .additional-info {
+        text-align: center;
+        font-style: italic;
+      }
+
+      footer {
+        width: 100%;
+        margin-top: 5rem;
+        padding-top: 3px;
+
+        border-top: 3px solid var(--contrast);
+      }
+
+      footer div {
+        display: flex;
+        place-content: center;
+        place-items: center;
+
+        width: 100%;
+        border-top: 1px solid var(--contrast);
+      }
+
+      footer img {
+        width: 50px;
+      }
+    </style>
+
+    <title>[Notification] New Scheduled Shift</title>
+  </head>
+
+  <body>
+    <header>
+      <div>
+        <img
+          src="https://res.cloudinary.com/dpdgmr3xw/image/upload/v1690099237/logo/zvjvoj8y5992iigzc9zm.png"
+          alt=""
+        />
+        <span class="logo">dnt</span>
+      </div>
+    </header>
+    <main>
+      <h1>[Notification] New Scheduled Shift</h1>
+      <p class="primary-info">Hello, {{name}}!</p>
+
+      <p class="primary-info">
+        You have been assigned to a new scheduled shift. Below are the details
+        of it.
+      </p>
+
+      <p class="primary-info">
+        Shift: <span class="identifier">{{shift}}</span>
+      </p>
+      <p class="primary-info">Date: <span class="identifier">{{date}}</span></p>
+      <p class="primary-info">
+        Start: <span class="identifier">{{start}}</span>
+      </p>
+      <p class="primary-info">End: <span class="identifier">{{end}}</span></p>
+
+      <p class="primary-info">
+        Please do not forget to do do clock-in and clock-out using your dnt's
+        attendance app.
+      </p>
+
+      <p class="additional-info">
+        If you are not part of dnt's team, please ignore this email.
+      </p>
+    </main>
+    <footer>
+      <div>
+        <img
+          src="https://res.cloudinary.com/dpdgmr3xw/image/upload/v1690099237/logo/zvjvoj8y5992iigzc9zm.png"
+          alt=""
+        />
+        <p>dnt - donut & tea</p>
+      </div>
+    </footer>
+  </body>
+</html>
