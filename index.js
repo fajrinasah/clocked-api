@@ -12,6 +12,7 @@ import chalk from "chalk";
 /*-------------------------------------------------------*/
 import * as helpers from "./src/helpers/index.js";
 import * as middlewares from "./src/middlewares/index.js";
+import * as routers from "./src/controllers/routers/index.js";
 
 /*-------------------------------------------------------*/
 // DEPENDENCIES CONFIGURATIONS
@@ -42,6 +43,7 @@ app.get("/api", (req, res) => {
 /*-------------------------------------------------------*/
 // USE ROUTERS
 /*-------------------------------------------------------*/
+app.use("/api/auth", routers.authRouters);
 
 /*-------------------------------------------------------*/
 // USE ERROR HANDLER
