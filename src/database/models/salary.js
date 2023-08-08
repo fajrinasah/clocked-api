@@ -28,7 +28,7 @@ export const Salary = db.sequelize.define(
 
     total_deduction: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
 
     total_amount: {
