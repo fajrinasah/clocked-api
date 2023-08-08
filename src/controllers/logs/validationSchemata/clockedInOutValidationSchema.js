@@ -4,7 +4,7 @@ import * as Yup from "yup";
 CLOCKED IN/OUT VALIDATION SCHEMA
 -----------------------------------------------------*/
 export const clockedInOutValidationSchema = Yup.object({
-  scheduled_date: Yup.string()
+  scheduledDate: Yup.string()
     .required("Scheduled date is required.")
     .min(
       10,

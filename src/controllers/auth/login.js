@@ -18,6 +18,18 @@ export const login = async (req, res, next) => {
     // CHECK IF USER EXISTS
     const user = await User?.findOne({
       where: { email },
+
+      attributes: [
+        "uuid",
+        "email",
+        "password",
+        ["full_name", "fullName"],
+        "dob",
+        ["role_id", "roleId"],
+        ["position_id", "positionId"],
+        ["joined_at", "joinedAt"],
+        ["updated_at", "updatedAt"],
+      ],
     });
 
     if (!user)
@@ -27,7 +39,7 @@ export const login = async (req, res, next) => {
       };
 
     // CHECK IF USER IS AN EMPLOYEE AND HAVE NOT ACTIVATED THEIR ACCOUNT YET
-    if (user.dataValues?.role_id === 2 && !user.dataValues.full_name) {
+    if (user.dataValues?.roleId === 2 && !user.dataValues.fullName) {
       throw {
         status: errorStatus.BAD_REQUEST_STATUS,
         message: errorMessage.USER_DOES_NOT_EXISTS,
@@ -61,7 +73,7 @@ export const login = async (req, res, next) => {
       // GENERATE NEW ACCESS TOKEN
       accessToken = helpers.createToken({
         uuid: user?.dataValues?.uuid,
-        role_id: user?.dataValues?.role_id,
+        roleId: user?.dataValues?.roleId,
       });
 
       // SET ACCESS TOKEN
@@ -71,11 +83,8 @@ export const login = async (req, res, next) => {
     }
 
     // DELETE SENSITIVE DATA FROM USER'S DATA THAT WILL BE SENT TO CLIENT
-    delete user?.dataValues?.id;
     delete user?.dataValues?.uuid;
     delete user?.dataValues?.password;
-    delete user?.dataValues?.otp;
-    delete user?.dataValues?.otp_exp;
 
     // SEND RESPONSE
     res

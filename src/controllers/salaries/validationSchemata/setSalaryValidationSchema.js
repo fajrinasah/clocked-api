@@ -4,7 +4,7 @@ import * as Yup from "yup";
 SET SALARY FOR AN EMPLOYEE
 -----------------------------------------------------*/
 export const setSalaryValidationSchema = Yup.object({
-  employee_email: Yup.string()
+  employeeEmail: Yup.string()
     .required("Employee's email is required.")
     .email("Employee's email must be valid.")
     .matches(
@@ -20,10 +20,10 @@ export const setSalaryValidationSchema = Yup.object({
       "Employee's email address' length should be between 10 to 45 characters."
     ),
 
-  salary_period: Yup.string()
+  salaryPeriod: Yup.string()
     .required("Salary period is required.")
     .min(7, "Salary period's length must be 7 characters (format: YYYY-MM).")
     .max(7, "Salary period's length must be 7 characters (format: YYYY-MM)."),
 
-  base_amount: Yup.number().required("Base amount of salary is required."),
+  baseAmount: Yup.number().required("Base amount of salary is required."),
 });

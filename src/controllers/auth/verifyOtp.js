@@ -40,9 +40,7 @@ export const verifyOtp = async (req, res, next) => {
     if (isExpired)
       throw {
         status: errorStatus.BAD_REQUEST_STATUS,
-        message:
-          errorMessage.INVALID_CREDENTIALS +
-          `: OTP token has expired. Please try to request OTP token again.`,
+        message: errorMessage.INVALID_CREDENTIALS + `: OTP token has expired.`,
       };
 
     // RESET OTP & ITS EXPIRED DATETIME
@@ -53,7 +51,7 @@ export const verifyOtp = async (req, res, next) => {
 
     // SEND RESPONSE
     res.status(200).json({
-      message: "OTP token successfully verified.",
+      message: "OTP token was successfully verified.",
     });
   } catch (error) {
     next(error);

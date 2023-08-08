@@ -4,7 +4,7 @@ import * as Yup from "yup";
 SAVE EMPLOYEE DATA VALIDATION SCHEMA
 -----------------------------------------------------*/
 export const saveEmployeeDataValidationSchema = Yup.object({
-  full_name: Yup.string()
+  fullName: Yup.string()
     .required("Full name is required.")
     .min(3, "Full name's length must be between 3 to 45 characters.")
     .max(45, "Full name's length must be between 3 to 45 characters."),

@@ -12,7 +12,7 @@ export async function verifyAdmin(req, res, next) {
 
     const decoded = verifyToken(token);
 
-    if (decoded?.role_id !== 1)
+    if (decoded?.roleId ? decoded?.roleId !== 1 : decoded?.role_id !== 1)
       throw {
         message:
           errorMessage.UNAUTHORIZED + `: only admin can access this feature.`,

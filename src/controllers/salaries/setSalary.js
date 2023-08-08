@@ -20,17 +20,17 @@ import * as validation from "./validationSchemata/index.js";
 export const setSalary = async (req, res, next) => {
   try {
     // VALIDATE DATA
-    const { employee_email, salary_period, base_amount } = req.body;
+    const { employeeEmail, salaryPeriod, baseAmount } = req.body;
     await validation.setSalaryValidationSchema.validate(req.body);
 
     // GET EMPLOYEE'S DATA
     const employee = await User?.findOne({
-      where: { email: employee_email },
+      where: { email: employeeEmail },
     });
 
     // CHECK IF SALARY DATA WITH THE SAME EMPLOYEE AND THE SAME DATE HAS ALREADY EXISTS
     const salaryExists = await Salary?.findOne({
-      where: { employee_id: employee?.dataValues?.id, for: salary_period },
+      where: { employee_id: employee?.dataValues?.id, for: salaryPeriod },
     });
 
     if (salaryExists)
@@ -38,23 +38,25 @@ export const setSalary = async (req, res, next) => {
         status: errorStatus.BAD_REQUEST_STATUS,
         message:
           errorMessage.BAD_REQUEST +
-          `: salary data for this employee with payment date ${salary_period} is already exists.`,
+          `: salary data for this employee with payment date ${salaryPeriod} is already exists.`,
       };
 
     // GET TOTAL DEDUCTION FROM ATTENDANCE LOGS
-    const total_deduction = await AttendanceLog?.sum("salary_deduction", {
-      where: { scheduled_date: { [Op.startsWith]: salary_period } },
+    const totalDeduction = await AttendanceLog?.sum("salary_deduction", {
+      where: { scheduled_date: { [Op.startsWith]: salaryPeriod } },
     });
 
-    const total_amount = base_amount - total_deduction;
+    const totalAmount = totalDeduction
+      ? baseAmount - totalDeduction
+      : baseAmount;
 
     // INSERT SALARY DATA TO DB
-    const salary = await Salary?.create({
+    await Salary?.create({
       employee_id: employee?.dataValues?.id,
-      for: salary_period,
-      base_amount,
-      total_deduction,
-      total_amount,
+      for: salaryPeriod,
+      base_amount: baseAmount,
+      total_deduction: totalDeduction,
+      total_amount: totalAmount,
     });
 
     // COMPOSE NOTIFICATION MAIL
@@ -70,16 +72,16 @@ export const setSalary = async (req, res, next) => {
 
     const emailData = handlebars.compile(emailTemplate)({
       name: employee?.dataValues?.full_name,
-      salaryFor: salary_period,
-      base: formatter.format(base_amount),
-      deduction: formatter.format(total_deduction),
-      total: formatter.format(total_amount),
+      salaryFor: salaryPeriod,
+      base: formatter.format(baseAmount),
+      deduction: formatter.format(totalDeduction),
+      total: formatter.format(totalAmount),
     });
 
     // SEND MAIL
     const mailOptions = {
       from: configs.GMAIL,
-      to: employee_email,
+      to: employeeEmail,
       subject: "[Notification] Salary Details",
       html: emailData,
     };
@@ -89,12 +91,23 @@ export const setSalary = async (req, res, next) => {
       console.log("Email was sent successfully: " + info.response);
     });
 
-    // DELETE SENSITIVE DATA
-    delete salary?.dataValues?.employee_id;
+    // GET NEWLY ADDED SALARY DATA WITH CAMEL-CASED PROP NAME
+    const salary = await Salary?.findOne({
+      where: { employee_id: employee?.dataValues?.id, for: salaryPeriod },
+
+      attributes: [
+        "id",
+        "for",
+        ["base_amount", "baseAmount"],
+        ["total_deduction", "totalDeduction"],
+        ["total_amount", "totalAmount"],
+        ["created_at", "createdAt"],
+      ],
+    });
 
     // SEND RESPONSE
     res.status(201).json({
-      message: `Salary was recorded successfully. Notification mail was sent to ${employee_email}`,
+      message: `Salary was recorded successfully. Notification mail was sent to ${employeeEmail}`,
       salary,
     });
   } catch (error) {

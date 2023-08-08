@@ -19,7 +19,7 @@ import * as validation from "./validationSchemata/index.js";
 export const addEmployee = async (req, res, next) => {
   try {
     // VALIDATE DATA
-    const { email, position_id } = req.body;
+    const { email, positionId } = req.body;
     await validation.addEmployeeValidationSchema.validate(req.body);
 
     // CHECK IF USER ALREADY EXISTS
@@ -35,7 +35,7 @@ export const addEmployee = async (req, res, next) => {
 
     // CHECK IF POSITION ID EXISTS
     const positionIdExists = await Position?.findOne({
-      where: { id: position_id },
+      where: { id: positionId },
     });
 
     if (!positionIdExists)
@@ -48,9 +48,9 @@ export const addEmployee = async (req, res, next) => {
     const otpToken = helpers.generateOtp();
 
     // INSERT USER'S DATA TO USERS TABLE
-    const user = await User?.create({
+    const newUser = await User?.create({
       email,
-      position_id,
+      position_id: positionId,
       otp: otpToken,
       otp_exp: DateTime.now().plus({ days: 1 }).toFormat("yyyy-LL-dd hh:mm:ss"),
     });
@@ -64,7 +64,8 @@ export const addEmployee = async (req, res, next) => {
     const emailData = handlebars.compile(emailTemplate)({
       email,
       otpToken,
-      link: configs.REDIRECT_URL + `/auth/verify/act-${user?.dataValues?.uuid}`,
+      link:
+        configs.REDIRECT_URL + `/auth/verify/act-${newUser?.dataValues?.uuid}`,
     });
 
     // SEND MAIL
@@ -80,12 +81,20 @@ export const addEmployee = async (req, res, next) => {
       console.log("Email was sent successfully: " + info.response);
     });
 
-    // DELETE SENSITIVE DATA FROM USER'S DATA THAT WILL BE SENT TO CLIENT
-    delete user?.dataValues?.id;
-    delete user?.dataValues?.uuid;
-    delete user?.dataValues?.password;
-    delete user?.dataValues?.otp;
-    delete user?.dataValues?.otp_exp;
+    // GET NEWLY ADDED USER'S DATA WITH CAMEL-CASED PROP NAME
+    const user = await User?.findOne({
+      where: { email },
+
+      attributes: [
+        "email",
+        ["full_name", "fullName"],
+        "dob",
+        ["role_id", "roleId"],
+        ["position_id", "positionId"],
+        ["joined_at", "joinedAt"],
+        ["updated_at", "updatedAt"],
+      ],
+    });
 
     // SEND RESPONSE
     res.status(201).json({

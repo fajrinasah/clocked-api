@@ -4,7 +4,7 @@ import * as Yup from "yup";
 SET SHIFT (TO AN EMPLOYEE) VALIDATION SCHEMA
 -----------------------------------------------------*/
 export const setShiftValidationSchema = Yup.object({
-  employee_email: Yup.string()
+  employeeEmail: Yup.string()
     .required("Employee's email is required.")
     .email("Employee's email must be valid.")
     .matches(
@@ -20,7 +20,7 @@ export const setShiftValidationSchema = Yup.object({
       "Employee's email address' length should be between 10 to 45 characters."
     ),
 
-  scheduled_date: Yup.string()
+  scheduledDate: Yup.string()
     .required("Scheduled date is required.")
     .min(
       10,
@@ -31,9 +31,9 @@ export const setShiftValidationSchema = Yup.object({
       "Scheduled date's length must be 10 characters (format: YYYY-MM-DD)."
     ),
 
-  shift_id: Yup.number().required("Shift ID is required."),
+  shiftId: Yup.number().required("Shift ID is required."),
 
-  salary_deduction: Yup.number().required(
+  salaryDeduction: Yup.number().required(
     "Initial salary amount for this shift is required."
   ),
 });

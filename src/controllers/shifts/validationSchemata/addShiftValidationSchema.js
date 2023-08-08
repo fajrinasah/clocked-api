@@ -9,7 +9,7 @@ export const addShiftValidationSchema = Yup.object({
     .min(3, "Shift name's length must be between 3 to 45 characters.")
     .max(45, "Shift name's length must be between 3 to 45 characters."),
 
-  from_time: Yup.string()
+  fromTime: Yup.string()
     .required("Shift start time is required.")
     .min(8, "Shift start time's length must be 8 characters (format hh:mm:ss).")
     .max(
@@ -17,7 +17,7 @@ export const addShiftValidationSchema = Yup.object({
       "Shift start time's length must be 8 characters (format hh:mm:ss)."
     ),
 
-  to_time: Yup.string()
+  toTime: Yup.string()
     .required("Shift end time is required.")
     .min(8, "Shift end time's length must be 8 characters (format hh:mm:ss).")
     .max(8, "Shift end time's length must be 8 characters (format hh:mm:ss)."),

@@ -57,9 +57,14 @@ export const getOwnPayrollReports = async (req, res, next) => {
     // GET DATA FROM DB
     /*------------------------------------------------------*/
     const reports = await Salary.findAll({
-      attributes: {
-        exclude: ["employee_id"],
-      },
+      attributes: [
+        "id",
+        "for",
+        ["base_amount", "baseAmount"],
+        ["total_deduction", "totalDeduction"],
+        ["total_amount", "totalAmount"],
+        ["created_at", "createdAt"],
+      ],
 
       where: whereCondition,
 
@@ -69,9 +74,9 @@ export const getOwnPayrollReports = async (req, res, next) => {
       ...options,
     });
 
-    const total_reports = await Salary?.count({ where: whereCondition });
+    const totalReports = await Salary?.count({ where: whereCondition });
 
-    const total_pages = page ? Math.ceil(total_reports / options.limit) : null;
+    const totalPages = page ? Math.ceil(totalReports / options.limit) : null;
 
     // CHECK IF THERE'S NO DATA
     if (!reports.length)
@@ -83,9 +88,9 @@ export const getOwnPayrollReports = async (req, res, next) => {
     // SEND RESPONSE
     res.status(200).json({
       page: parseInt(page),
-      total_pages,
-      total_reports,
-      reports_limit: options.limit,
+      totalPages,
+      totalReports,
+      reportsLimit: options.limit,
       reports,
     });
   } catch (error) {

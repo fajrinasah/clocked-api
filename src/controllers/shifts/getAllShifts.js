@@ -5,7 +5,14 @@ import { Shift } from "../../database/models/shift.js";
 /*----------------------------------------------------*/
 export const getAllShifts = async (req, res, next) => {
   try {
-    const shifts = await Shift?.findAll();
+    const shifts = await Shift?.findAll({
+      attributes: [
+        "id",
+        "name",
+        ["from_time", "fromTime"],
+        ["to_time", "toTime"],
+      ],
+    });
 
     // SEND RESPONSE
     res.status(200).json({

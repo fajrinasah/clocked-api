@@ -12,7 +12,7 @@ import * as validation from "./validationSchemata/index.js";
 export const addShift = async (req, res, next) => {
   try {
     // VALIDATE DATA
-    const { name, from_time, to_time } = req.body;
+    const { name, fromTime, toTime } = req.body;
     await validation.addShiftValidationSchema.validate(req.body);
 
     // CHECK IF SHIFT'S NAME ALREADY EXISTS
@@ -28,10 +28,22 @@ export const addShift = async (req, res, next) => {
       };
 
     // INSERT NEW SHIFT'S DATA TO DB
-    const shift = await Shift?.create({
+    await Shift?.create({
       name,
-      from_time,
-      to_time,
+      from_time: fromTime,
+      to_time: toTime,
+    });
+
+    // GET NEWLY ADDED SHIFT DATA WITH CAMEL-CASED PROP NAME
+    const shift = await Shift?.findOne({
+      where: { name },
+
+      attributes: [
+        "id",
+        "name",
+        ["from_time", "fromTime"],
+        ["to_time", "toTime"],
+      ],
     });
 
     // SEND RESPONSE

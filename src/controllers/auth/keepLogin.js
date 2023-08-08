@@ -10,22 +10,27 @@ export const keepLogin = async (req, res, next) => {
     const { uuid } = req.user;
 
     // GET USER'S DATA AND PROFILE
-    const user = await User?.findOne({ where: { uuid } });
+    const user = await User?.findOne({
+      where: { uuid },
+
+      attributes: [
+        "email",
+        ["full_name", "fullName"],
+        "dob",
+        ["role_id", "roleId"],
+        ["position_id", "positionId"],
+        ["joined_at", "joinedAt"],
+        ["updated_at", "updatedAt"],
+      ],
+    });
 
     // CHECK IF USER IS AN EMPLOYEE AND HAVE NOT ACTIVATED THEIR ACCOUNT YET
-    if (user.dataValues?.role_id === 2 && !user.dataValues.full_name) {
+    if (user.dataValues?.roleId === 2 && !user.dataValues.fullName) {
       throw {
         status: errorStatus.BAD_REQUEST_STATUS,
         message: errorMessage.USER_DOES_NOT_EXISTS,
       };
     }
-
-    // DELETE SENSITIVE DATA FROM USER'S DATA THAT WILL BE SENT TO CLIENT
-    delete user?.dataValues?.id;
-    delete user?.dataValues?.uuid;
-    delete user?.dataValues?.password;
-    delete user?.dataValues?.otp;
-    delete user?.dataValues?.otp_exp;
 
     // SEND RESPONSE
     res.status(200).json({ user });

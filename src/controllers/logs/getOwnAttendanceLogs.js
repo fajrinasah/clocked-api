@@ -57,16 +57,25 @@ export const getOwnAttendanceLogs = async (req, res, next) => {
     // GET DATA FROM DB
     /*------------------------------------------------------*/
     const logs = await AttendanceLog.findAll({
-      attributes: {
-        exclude: ["employee_id"],
-      },
-
       where: whereCondition,
+
+      attributes: [
+        "id",
+        ["scheduled_date", "scheduledDate"],
+        ["clocked_in", "clockedIn"],
+        ["clocked_out", "clockedOut"],
+        ["salary_deduction", "salaryDeduction"],
+      ],
 
       include: [
         {
           model: Shift,
-          attributes: ["name", ["from_time", "start"], ["to_time", "end"]],
+          attributes: [
+            "id",
+            "name",
+            ["from_time", "fromTime"],
+            ["to_time", "toTime"],
+          ],
           required: true,
         },
       ],
@@ -77,9 +86,9 @@ export const getOwnAttendanceLogs = async (req, res, next) => {
       ...options,
     });
 
-    const total_logs = await AttendanceLog?.count({ where: whereCondition });
+    const totalLogs = await AttendanceLog?.count({ where: whereCondition });
 
-    const total_pages = page ? Math.ceil(total_logs / options.limit) : null;
+    const totalPages = page ? Math.ceil(totalLogs / options.limit) : null;
 
     // CHECK IF THERE'S NO DATA
     if (!logs.length)
@@ -91,9 +100,9 @@ export const getOwnAttendanceLogs = async (req, res, next) => {
     // SEND RESPONSE
     res.status(200).json({
       page: parseInt(page),
-      total_pages,
-      total_logs,
-      logs_limit: options.limit,
+      totalPages,
+      totalLogs,
+      logsLimit: options.limit,
       logs,
     });
   } catch (error) {

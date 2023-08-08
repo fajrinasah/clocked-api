@@ -13,7 +13,7 @@ import * as validation from "./validationSchemata/index.js";
 export const saveEmployeeData = async (req, res, next) => {
   try {
     const { uuidWithContext } = req.params;
-    const { full_name, dob, password } = req.body;
+    const { fullName, dob, password } = req.body;
     await validation.saveEmployeeDataValidationSchema.validate(req.body);
 
     // GET UUID
@@ -43,7 +43,7 @@ export const saveEmployeeData = async (req, res, next) => {
 
     // UPDATE EMPLOYEE DATA
     await User?.update(
-      { full_name, dob, password: hashedPassword },
+      { full_name: fullName, dob, password: hashedPassword },
       { where: { uuid: cleanedUuid } }
     );
 

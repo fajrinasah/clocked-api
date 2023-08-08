@@ -15,7 +15,7 @@ export const clockedInOut = async (req, res, next) => {
     const { uuid } = req.user;
 
     // VALIDATE DATA
-    const { scheduled_date, type, time } = req.body;
+    const { scheduledDate, type, time } = req.body;
     await validation.clockedInOutValidationSchema.validate(req.body);
 
     // GET EMPLOYEE'S DATA
@@ -27,7 +27,7 @@ export const clockedInOut = async (req, res, next) => {
     const schedule = await AttendanceLog.findOne({
       where: {
         employee_id: employee?.dataValues?.id,
-        scheduled_date,
+        scheduled_date: scheduledDate,
       },
     });
 
@@ -37,7 +37,7 @@ export const clockedInOut = async (req, res, next) => {
         status: errorStatus.BAD_REQUEST_STATUS,
         message:
           errorMessage.BAD_REQUEST +
-          `: no schedule was assigned to ${employee?.dataValues?.full_name} for ${scheduled_date}`,
+          `: no schedule was assigned to ${employee?.dataValues?.full_name} for ${scheduledDate}`,
       };
 
     // IF CLOCKED IN/OUT COLUMN WAS ALREADY FILLED
@@ -46,7 +46,7 @@ export const clockedInOut = async (req, res, next) => {
         status: errorStatus.BAD_REQUEST_STATUS,
         message:
           errorMessage.BAD_REQUEST +
-          `: already clocked in for ${scheduled_date}`,
+          `: already clocked in for ${scheduledDate}`,
       };
 
     if (type === "out" && schedule.dataValues.clocked_out)
@@ -54,7 +54,7 @@ export const clockedInOut = async (req, res, next) => {
         status: errorStatus.BAD_REQUEST_STATUS,
         message:
           errorMessage.BAD_REQUEST +
-          `: already clocked out for ${scheduled_date}`,
+          `: already clocked out for ${scheduledDate}`,
       };
 
     // CUT INITIAL SALARY DEDUCTION BASED ON TYPE
@@ -71,7 +71,7 @@ export const clockedInOut = async (req, res, next) => {
     await AttendanceLog.update(columnsToUpdate, {
       where: {
         employee_id: employee?.dataValues?.id,
-        scheduled_date,
+        scheduled_date: scheduledDate,
       },
     });
 

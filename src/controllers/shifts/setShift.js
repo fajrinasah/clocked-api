@@ -20,23 +20,25 @@ import * as validation from "./validationSchemata/index.js";
 export const setShift = async (req, res, next) => {
   try {
     // VALIDATE DATA
-    const { employee_email, scheduled_date, shift_id, salary_deduction } =
-      req.body;
+    const { employeeEmail, scheduledDate, shiftId, salaryDeduction } = req.body;
     await validation.setShiftValidationSchema.validate(req.body);
 
     // GET EMPLOYEE'S DATA
     const employee = await User?.findOne({
-      where: { email: employee_email },
+      where: { email: employeeEmail },
     });
 
     // GET SHIFT'S DATA
     const shift = await Shift?.findOne({
-      where: { id: shift_id },
+      where: { id: shiftId },
     });
 
     // CHECK IF SCHEDULE WITH THE SAME EMPLOYEE AT THE SAME DATE HAS ALREADY EXISTS
     const scheduleExists = await AttendanceLog?.findOne({
-      where: { employee_id: employee?.dataValues?.id, scheduled_date },
+      where: {
+        employee_id: employee?.dataValues?.id,
+        scheduled_date: scheduledDate,
+      },
     });
 
     if (scheduleExists)
@@ -44,15 +46,15 @@ export const setShift = async (req, res, next) => {
         status: errorStatus.BAD_REQUEST_STATUS,
         message:
           errorMessage.BAD_REQUEST +
-          `: schedule for ${scheduled_date} was already assigned to ${employee?.dataValues?.full_name} `,
+          `: schedule for ${scheduledDate} was already assigned to ${employee?.dataValues?.full_name} `,
       };
 
     // INSERT SCHEDULED SHIFT TO ATTENDANCE LOG
-    const attendanceLog = await AttendanceLog?.create({
+    await AttendanceLog?.create({
       employee_id: employee?.dataValues?.id,
-      scheduled_date,
-      shift_id,
-      salary_deduction,
+      scheduled_date: scheduledDate,
+      shift_id: shiftId,
+      salary_deduction: salaryDeduction,
     });
 
     // COMPOSE NOTIFICATION MAIL
@@ -69,6 +71,7 @@ export const setShift = async (req, res, next) => {
     const formattedStart = DateTime.fromSQL(
       shift?.dataValues?.from_time
     ).toLocaleString(DateTime.TIME_24_SIMPLE);
+
     const formattedEnd = DateTime.fromSQL(
       shift?.dataValues?.to_time
     ).toLocaleString(DateTime.TIME_24_SIMPLE);
@@ -76,7 +79,7 @@ export const setShift = async (req, res, next) => {
     const emailData = handlebars.compile(emailTemplate)({
       name: employee?.dataValues?.full_name,
       shift: shift?.dataValues?.name,
-      date: scheduled_date,
+      date: scheduledDate,
       start: formattedStart,
       end: formattedEnd,
     });
@@ -84,7 +87,7 @@ export const setShift = async (req, res, next) => {
     // SEND MAIL
     const mailOptions = {
       from: configs.GMAIL,
-      to: employee_email,
+      to: employeeEmail,
       subject: "[Notification] New Scheduled Shift",
       html: emailData,
     };
@@ -94,13 +97,26 @@ export const setShift = async (req, res, next) => {
       console.log("Email was sent successfully: " + info.response);
     });
 
-    // DELETE SENSITIVE DATA
-    delete attendanceLog?.dataValues?.employee_id;
+    // GET NEWLY ADDED SHIFT DATA WITH CAMEL-CASED PROP NAME
+    const log = await AttendanceLog?.findOne({
+      where: {
+        employee_id: employee?.dataValues?.id,
+        scheduled_date: scheduledDate,
+      },
+
+      attributes: [
+        "id",
+        ["scheduled_date", "scheduledDate"],
+        ["clocked_in", "clockedIn"],
+        ["clocked_out", "clockedOut"],
+        ["salary_deduction", "salaryDeduction"],
+      ],
+    });
 
     // SEND RESPONSE
     res.status(201).json({
-      message: `New scheduled shift has been registered successfully. Notification mail was sent to ${employee_email}`,
-      attendanceLog,
+      message: `New scheduled shift has been registered successfully. Notification mail was sent to ${employeeEmail}`,
+      log,
     });
   } catch (error) {
     // IF ERROR FROM VALIDATION

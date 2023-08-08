@@ -5,7 +5,7 @@ export const getAllEmployees = async (req, res, next) => {
     const employees = await User?.findAll({
       where: { role_id: 2 },
 
-      attributes: ["email", "full_name"],
+      attributes: ["email", ["full_name", "fullName"]],
     });
 
     // SEND RESPONSE

@@ -14,5 +14,5 @@ export const addEmployeeValidationSchema = Yup.object({
     .min(10, "Email address' length should be between 10 to 45 characters.")
     .max(45, "Email address' length should be between 10 to 45 characters."),
 
-  position_id: Yup.number().required("Position ID is required."),
+  positionId: Yup.number().required("Position ID is required."),
 });
