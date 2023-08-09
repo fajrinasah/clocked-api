@@ -15,4 +15,6 @@ GET
 -------------------------------------------------------------*/
 router.get("", verifyAdmin, employeesControllers.getAllEmployees);
 
+router.get("/positions", verifyAdmin, employeesControllers.getAllPositions);
+
 export default router;
