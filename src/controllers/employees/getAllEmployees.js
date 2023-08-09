@@ -6,6 +6,8 @@ export const getAllEmployees = async (req, res, next) => {
       where: { role_id: 2 },
 
       attributes: ["email", ["full_name", "fullName"]],
+
+      order: [["full_name", "ASC"]],
     });
 
     // SEND RESPONSE
