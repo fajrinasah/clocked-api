@@ -10,6 +10,8 @@ GET
 -------------------------------------------------------------*/
 router.get("", verifyUser, logsControllers.getOwnAttendanceLogs);
 
+router.get("/today", verifyUser, logsControllers.getOwnTodayLog);
+
 /*------------------------------------------------------------
 PATCH
 -------------------------------------------------------------*/

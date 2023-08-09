@@ -12,6 +12,8 @@ export const getAllShifts = async (req, res, next) => {
         ["from_time", "fromTime"],
         ["to_time", "toTime"],
       ],
+
+      order: [["name", "ASC"]],
     });
 
     // SEND RESPONSE
